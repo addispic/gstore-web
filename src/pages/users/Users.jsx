@@ -2,8 +2,12 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 // icons
-import { CiClock1 } from "react-icons/ci";
 import { GoClockFill } from "react-icons/go";
+
+// sub user components
+import Login from './Login';
+import Register from './Register';
+import ForgetPassword from './ForgetPassword';
 
 const Users = () => {
   return (
@@ -67,7 +71,15 @@ const Users = () => {
                 </div>
             </div>
             {/* right */}
-            <div className='w-[50%] lg:w-[45%] bg-red-400'>right</div>
+            <div className='w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10'>
+                {
+                    true 
+                    ?
+                    <Register />
+                    :
+                    <Login />
+                }
+            </div>
         </div>
     </div>
   )
