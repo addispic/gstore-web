@@ -94,7 +94,9 @@ const Users = () => {
         </div>
         {/* right */}
         <div className="w-full sm:w-[65%] mx-auto md:w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10">
-          {true ? <UsersSpinner />  : (
+          {!true ? (
+            <UsersSpinner />
+          ) : (
             <>
               {usersDirection === "LOGIN" ? (
                 <Login />
