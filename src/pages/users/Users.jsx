@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import {useSelector} from 'react-redux'
 
 // icons
 import { GoClockFill } from "react-icons/go";
@@ -9,10 +10,20 @@ import Login from './Login';
 import Register from './Register';
 import ForgetPassword from './ForgetPassword';
 
+// slices
+// users
+import {usersDirectionSelector} from '../../features/users/usersSlice'
+
 const Users = () => {
+
+    // states
+    // slices
+    // users
+    const usersDirection = useSelector(usersDirectionSelector)
+
   return (
     <div className='w-full h-full py-10 px-3 sm:px-5 md:px-7 lg:px-10'>
-        <div className='max-w-[1024px] mx-auto flex gap-x-3 sm:gap-x-6 lg:gap-x-12'>
+        <div className='max-w-[1024px] mx-auto flex items-center gap-x-3 sm:gap-x-6 lg:gap-x-12'>
             {/* left */}
             <div className='w-[55%] bg-green-600 rounded-md overflow-hidden py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10 text-white h-[88vh] flex flex-col justify-between'>
                 {/* header */}
@@ -73,11 +84,18 @@ const Users = () => {
             {/* right */}
             <div className='w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10'>
                 {
-                    true 
+                    usersDirection === "LOGIN"
+                    ?
+                    <Login />
+                    :
+                    usersDirection === "REGISTER"
                     ?
                     <Register />
                     :
-                    <Login />
+                    usersDirection === "FORGET-PASSWORD"
+                    ?
+                    <ForgetPassword />
+                    :null
                 }
             </div>
         </div>
