@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {useSelector,useDispatch} from 'react-redux'
+import {NavLink, useNavigate} from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux";
 
 // icons
 import { GoEye } from "react-icons/go";
@@ -7,21 +8,31 @@ import { GoEyeClosed } from "react-icons/go";
 
 // slices
 // users
-import {usersDirectionSetter,userRegister,isUserRegisteringSelector, errorsSelector,resetErrors} from '../../features/users/usersSlice'
+import {
+  usersDirectionSetter,
+  userRegister,
+  isUserRegisteringSelector,
+  errorsSelector,
+  resetErrors,
+  isAuthorizedSelector,
+} from "../../features/users/usersSlice";
 
 // components
 // user spinner
-import UsersSpinner from './UsersSpinner'
+import UsersSpinner from "./UsersSpinner";
 
 const Register = () => {
   // hooks
   // dispatch
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  // navigate
+  const navigate = useNavigate()
   // states
   // states from slice
   // users slice
-  const isUserRegistering = useSelector(isUserRegisteringSelector)
-  const errors = useSelector(errorsSelector)
+  const isUserRegistering = useSelector(isUserRegisteringSelector);
+  const errors = useSelector(errorsSelector);
+  const isAuthorized = useSelector(isAuthorizedSelector)
   // local states
   // is focus
   const [isFocus, setIsFocus] = useState("");
@@ -47,17 +58,22 @@ const Register = () => {
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
 
   // effect
+  useEffect(() => {
+    if (errors?.username) {
+      setUsernameError(errors?.username);
+    }
+    if (errors?.email) {
+      setEmailError(errors?.email);
+    }
+    if (errors?.password) {
+      setPasswordError(errors?.password);
+    }
+  }, [errors]);
   useEffect(()=>{
-    if(errors?.username){
-      setUsernameError(errors?.username)
+    if(isAuthorized){
+      navigate("/")
     }
-    if(errors?.email){
-      setEmailError(errors?.email)
-    }
-    if(errors?.password){
-      setPasswordError(errors?.password)
-    }
-  },[errors])
+  },[isAuthorized])
 
   // email validator
   const emailValidator = (email) => {
@@ -106,12 +122,12 @@ const Register = () => {
       !passwordError &&
       !passwordConfirmError
     ) {
-      dispatch(userRegister({username,email,password}))
+      dispatch(userRegister({ username, email, password }));
     }
   };
 
-  if(isUserRegistering){
-    return <UsersSpinner />
+  if (isUserRegistering) {
+    return <UsersSpinner />;
   }
 
   return (
@@ -383,10 +399,16 @@ const Register = () => {
         <div>
           <p className="text-center mt-5 text-sm text-green-600">
             already have an{" "}
-            <button className="font-bold hover:underline" onClick={()=>{
-              dispatch(usersDirectionSetter("LOGIN"))
-              dispatch(resetErrors())
-            }}>account</button> ?
+            <button
+              className="font-bold hover:underline"
+              onClick={() => {
+                dispatch(usersDirectionSetter("LOGIN"));
+                dispatch(resetErrors());
+              }}
+            >
+              account
+            </button>{" "}
+            ?
           </p>
         </div>
       </div>

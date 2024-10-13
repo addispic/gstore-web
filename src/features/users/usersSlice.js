@@ -5,7 +5,9 @@ import axios from 'axios'
 const initialState = {
     usersDirection: "LOGIN",
     isUserRegistering: false,
-    errors: null
+    isAuthorized: false,
+    errors: null,
+    user: null,
 }
 
 // register
@@ -28,6 +30,16 @@ export const userLogin = createAsyncThunk("users/userLogin", async data => {
     }
 })
 
+// is user authenticated
+export const isUserAuthenticated = createAsyncThunk("users/isUserAuthenticated", async () =>{
+    try{
+        const response = await axios.get("/api/users/is-user-authenticated")
+        return response.data
+    }catch(err){
+        return err.response.data
+    }
+})
+
 // slice
 // users slice
 const usersSlice = createSlice({
@@ -36,6 +48,9 @@ const usersSlice = createSlice({
     reducers: {
         usersDirectionSetter: (state,action) => {
             state.usersDirection = action.payload
+        },
+        resetUserDirection: (state) => {
+            state.usersDirection = "LOGIN"
         },
         resetErrors: state => {
             state.errors = null
@@ -54,6 +69,11 @@ const usersSlice = createSlice({
                 state.isUserRegistering = false 
                 if(action.payload.errors){
                     state.errors = action.payload.errors
+                    state.isAuthorized = false
+                }
+                if(action.payload?.message === "authenticated"){
+                    state.isAuthorized = true
+                    state.errors = null
                 }
             })
             // rejected
@@ -70,12 +90,36 @@ const usersSlice = createSlice({
                 state.isUserRegistering = false
                 if(action.payload.errors){
                     state.errors = action.payload.errors
+                    state.isAuthorized = false
                 }
-                console.log(action.payload)
+                if(action.payload?.message === "authenticated"){
+                    state.isAuthorized = true
+                    state.errors = null
+                }
             })
             // rejected
             .addCase(userLogin.rejected, state => {
                 state.isUserRegistering = false
+            })
+            // is user authenticated
+            // pending
+            .addCase(isUserAuthenticated.pending, state => {
+                // pending
+            })
+            // fulfilled
+            .addCase(isUserAuthenticated.fulfilled, (state,action)=>{
+                console.log(action.payload)
+                if(action.payload?.error === "unauthorized"){
+                    state.user = null
+                    state.isAuthorized = false
+                }
+                if(action.payload?.user){
+                    state.user = action.payload.user
+                }
+            })
+            // rejected
+            .addCase(isUserAuthenticated.rejected, state => {
+                // rejected
             })
     }
 })
@@ -87,11 +131,16 @@ export const usersDirectionSelector = state => state.users.usersDirection
 export const isUserRegisteringSelector = state => state.users.isUserRegistering
 // errors
 export const errorsSelector = state => state.users.errors
+// user
+export const userSelector = state => state.users.user
+// is authorized
+export const isAuthorizedSelector = state => state.users.isAuthorized
 
 // actions
 export const {
     usersDirectionSetter,
     resetErrors,
+    resetUserDirection,
 } = usersSlice.actions
 
 // reducer

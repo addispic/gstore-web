@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from "react";
-import {useSelector,useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import { useSelector, useDispatch } from "react-redux";
 
 // icons
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
 
 // slices
-// users 
-import {usersDirectionSetter, userLogin, isUserRegisteringSelector, errorsSelector,resetErrors} from '../../features/users/usersSlice'
+// users
+import {
+  usersDirectionSetter,
+  userLogin,
+  isUserRegisteringSelector,
+  errorsSelector,
+  resetErrors,
+  isAuthorizedSelector,
+} from "../../features/users/usersSlice";
 
 // components
-import UsersSpinner from './UsersSpinner'
+import UsersSpinner from "./UsersSpinner";
 
 const Login = () => {
   // hooks
   // dispatch
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  // navigate
+  const navigate = useNavigate()
   // states
   // states from slice
-  const isUserRegistering = useSelector(isUserRegisteringSelector)
-  const errors = useSelector(errorsSelector)
+  const isUserRegistering = useSelector(isUserRegisteringSelector);
+  const errors = useSelector(errorsSelector);
+  const isAuthorized = useSelector(isAuthorizedSelector)
   // local states
   // is focus
   const [isFocus, setIsFocus] = useState("");
@@ -34,16 +45,20 @@ const Login = () => {
   // password error
   const [passwordError, setPasswordError] = useState("");
 
-   // effects
-   useEffect(()=>{
-    if(errors?.username){
-      setUsernameError(errors?.username)
+  // effects
+  useEffect(() => {
+    if (errors?.username) {
+      setUsernameError(errors?.username);
     }
-    if(errors?.password){
-      setPasswordError(errors?.password)
+    if (errors?.password) {
+      setPasswordError(errors?.password);
     }
-  },[errors])
- 
+  }, [errors]);
+  useEffect(()=>{
+    if(isAuthorized){
+      navigate("/")
+    }
+  },[isAuthorized])
 
   // form submit handler
   const formSubmitHandler = () => {
@@ -52,7 +67,7 @@ const Login = () => {
     } else {
       setUsernameError("");
     }
-    
+
     if (!password) {
       setPasswordError("password required");
     } else if (password.length < 3) {
@@ -61,23 +76,14 @@ const Login = () => {
       setPasswordError("");
     }
 
-    
-
-    if (
-      username?.trim() &&
-      password &&
-      !usernameError &&
-      !passwordError 
-    ) {
-      dispatch(userLogin({username,password}))
+    if (username?.trim() && password && !usernameError && !passwordError) {
+      dispatch(userLogin({ username, password }));
     }
   };
 
-  if(isUserRegistering){
-    return <UsersSpinner />
+  if (isUserRegistering) {
+    return <UsersSpinner />;
   }
-
- 
 
   return (
     <div>
@@ -138,7 +144,7 @@ const Login = () => {
             <p className="text-xs text-red-500 text-end">{usernameError}</p>
           </div>
         </div>
-        
+
         {/* password */}
         <div className="mt-2.5">
           <div
@@ -210,11 +216,16 @@ const Login = () => {
 
         {/* forget password */}
         <div className="text-xs  font-medium text-green-600 flex items-center">
-          <button className="hover:underline" onClick={()=>{
-            dispatch(usersDirectionSetter("FORGET-PASSWORD"))
-          }}>Forget password</button>
+          <button
+            className="hover:underline"
+            onClick={() => {
+              dispatch(usersDirectionSetter("FORGET-PASSWORD"));
+            }}
+          >
+            Forget password
+          </button>
         </div>
-        
+
         {/* button */}
         <button
           className="my-4 w-full flex items-center justify-center py-2 bg-green-600 text-white rounded-md transition-colors ease-in-out duration-150 hover:bg-green-500"
@@ -231,15 +242,21 @@ const Login = () => {
         <div>
           <p className="text-center mt-5 text-sm text-green-600">
             don't have an{" "}
-            <button className="font-bold hover:underline" onClick={()=>{
-              dispatch(usersDirectionSetter("REGISTER"))
-              dispatch(resetErrors())
-            }}>account</button> ?
+            <button
+              className="font-bold hover:underline"
+              onClick={() => {
+                dispatch(usersDirectionSetter("REGISTER"));
+                dispatch(resetErrors());
+              }}
+            >
+              account
+            </button>{" "}
+            ?
           </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

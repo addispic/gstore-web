@@ -1,6 +1,6 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, {useEffect} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 // icons
 import { GoClockFill } from "react-icons/go";
@@ -13,13 +13,26 @@ import ForgetPassword from "./ForgetPassword";
 
 // slices
 // users
-import { usersDirectionSelector } from "../../features/users/usersSlice";
+import { usersDirectionSelector, userSelector,resetUserDirection } from "../../features/users/usersSlice";
 
 const Users = () => {
+  // hooks
+  // navigate
+  const navigate = useNavigate()
+  // dispatch
+  const dispatch = useDispatch()
   // states
   // slices
   // users
   const usersDirection = useSelector(usersDirectionSelector);
+  const user = useSelector(userSelector)
+
+  // redirect
+  useEffect(()=>{
+    if(user){
+      navigate("/")
+    }
+  },[user])
 
 
   return (
@@ -30,7 +43,9 @@ const Users = () => {
           {/* header */}
           <header>
             {/* logo */}
-            <NavLink to={"/"}>
+            <NavLink onClick={()=>{
+              dispatch(resetUserDirection())
+            }} to={"/"}>
               <p className="text-lg font-black text-neutral-200">
                 g<span className="text-xl">store</span>
               </p>
