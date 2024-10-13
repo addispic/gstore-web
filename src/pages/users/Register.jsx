@@ -255,7 +255,7 @@ const Register = () => {
               }}
             />
             <button
-              className={`text-xl ${
+              className={`${
                 passwordError
                   ? "text-red-500"
                   : isFocus === "password" || password
@@ -325,7 +325,7 @@ const Register = () => {
               }}
             />
             <button
-              className={`text-xl ${
+              className={`${
                 passwordConfirmError
                   ? "text-red-500"
                   : isFocus === "confirm-password" || confirmPassword

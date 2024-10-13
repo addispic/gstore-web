@@ -168,7 +168,7 @@ const Login = () => {
               }}
             />
             <button
-              className={`text-xl ${
+              className={`${
                 passwordError
                   ? "text-red-500"
                   : isFocus === "password" || password
