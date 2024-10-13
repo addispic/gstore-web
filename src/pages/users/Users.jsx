@@ -25,7 +25,7 @@ const Users = () => {
     <div className='w-full h-full py-10 px-3 sm:px-5 md:px-7 lg:px-10'>
         <div className='max-w-[1024px] mx-auto flex items-center gap-x-3 sm:gap-x-6 lg:gap-x-12'>
             {/* left */}
-            <div className='w-[55%] bg-green-600 rounded-md overflow-hidden py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10 text-white h-[88vh] flex flex-col justify-between'>
+            <div className='hidden md:flex w-[55%] bg-green-600 rounded-md overflow-hidden py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10 text-white h-[88vh] flex-col justify-between'>
                 {/* header */}
                 <header>
                     {/* logo */}
@@ -82,7 +82,7 @@ const Users = () => {
                 </div>
             </div>
             {/* right */}
-            <div className='w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10'>
+            <div className='w-full sm:w-[65%] mx-auto md:w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10'>
                 {
                     usersDirection === "LOGIN"
                     ?
