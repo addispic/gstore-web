@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {useDispatch} from 'react-redux'
+import React, { useState, useEffect } from "react";
+import {useSelector,useDispatch} from 'react-redux'
 
 // icons
 import { GoEye } from "react-icons/go";
@@ -7,13 +7,19 @@ import { GoEyeClosed } from "react-icons/go";
 
 // slices
 // users 
-import {usersDirectionSetter} from '../../features/users/usersSlice'
+import {usersDirectionSetter, userLogin, isUserRegisteringSelector, errorsSelector,resetErrors} from '../../features/users/usersSlice'
+
+// components
+import UsersSpinner from './UsersSpinner'
 
 const Login = () => {
   // hooks
   // dispatch
   const dispatch = useDispatch()
   // states
+  // states from slice
+  const isUserRegistering = useSelector(isUserRegisteringSelector)
+  const errors = useSelector(errorsSelector)
   // local states
   // is focus
   const [isFocus, setIsFocus] = useState("");
@@ -27,6 +33,16 @@ const Login = () => {
   const [isPasswordHide, setIsPasswordHide] = useState(true);
   // password error
   const [passwordError, setPasswordError] = useState("");
+
+   // effects
+   useEffect(()=>{
+    if(errors?.username){
+      setUsernameError(errors?.username)
+    }
+    if(errors?.password){
+      setPasswordError(errors?.password)
+    }
+  },[errors])
  
 
   // form submit handler
@@ -53,11 +69,15 @@ const Login = () => {
       !usernameError &&
       !passwordError 
     ) {
-      console.log({ username, password });
-      setUsername("")
-      setPassword("")
+      dispatch(userLogin({username,password}))
     }
   };
+
+  if(isUserRegistering){
+    return <UsersSpinner />
+  }
+
+ 
 
   return (
     <div>
@@ -213,6 +233,7 @@ const Login = () => {
             don't have an{" "}
             <button className="font-bold hover:underline" onClick={()=>{
               dispatch(usersDirectionSetter("REGISTER"))
+              dispatch(resetErrors())
             }}>account</button> ?
           </p>
         </div>

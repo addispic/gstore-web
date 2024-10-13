@@ -9,7 +9,7 @@ import { GoClockFill } from "react-icons/go";
 import Login from "./Login";
 import Register from "./Register";
 import ForgetPassword from "./ForgetPassword";
-import UsersSpinner from "./UsersSpinner";
+
 
 // slices
 // users
@@ -20,6 +20,7 @@ const Users = () => {
   // slices
   // users
   const usersDirection = useSelector(usersDirectionSelector);
+
 
   return (
     <div className="w-full h-full py-10 px-3 sm:px-5 md:px-7 lg:px-10">
@@ -94,10 +95,7 @@ const Users = () => {
         </div>
         {/* right */}
         <div className="w-full sm:w-[65%] mx-auto md:w-[50%] lg:w-[45%] py-5 px-3 sm:px-3 md:px-3 lg:px-5 xl:px-10">
-          {!true ? (
-            <UsersSpinner />
-          ) : (
-            <>
+          
               {usersDirection === "LOGIN" ? (
                 <Login />
               ) : usersDirection === "REGISTER" ? (
@@ -105,8 +103,7 @@ const Users = () => {
               ) : usersDirection === "FORGET-PASSWORD" ? (
                 <ForgetPassword />
               ) : null}
-            </>
-          )}
+          
         </div>
       </div>
     </div>

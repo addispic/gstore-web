@@ -1,10 +1,15 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import axios from 'axios'
 
 import "./index.css";
 import App from "./App";
 import { store } from "./store";
+
+// axios settings
+axios.defaults.baseURL = "http://localhost:5000"
+axios.defaults.withCredentials = true
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

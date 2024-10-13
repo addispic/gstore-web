@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import {useDispatch} from 'react-redux'
+import React, { useState, useEffect } from "react";
+import {useSelector,useDispatch} from 'react-redux'
 
 // icons
 import { GoEye } from "react-icons/go";
@@ -7,13 +7,21 @@ import { GoEyeClosed } from "react-icons/go";
 
 // slices
 // users
-import {usersDirectionSetter} from '../../features/users/usersSlice'
+import {usersDirectionSetter,userRegister,isUserRegisteringSelector, errorsSelector,resetErrors} from '../../features/users/usersSlice'
+
+// components
+// user spinner
+import UsersSpinner from './UsersSpinner'
 
 const Register = () => {
   // hooks
   // dispatch
   const dispatch = useDispatch()
   // states
+  // states from slice
+  // users slice
+  const isUserRegistering = useSelector(isUserRegisteringSelector)
+  const errors = useSelector(errorsSelector)
   // local states
   // is focus
   const [isFocus, setIsFocus] = useState("");
@@ -37,6 +45,19 @@ const Register = () => {
   const [isPasswordConfirmHide, setIsPasswordConfirmHide] = useState(true);
   // is password confirm error
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
+
+  // effect
+  useEffect(()=>{
+    if(errors?.username){
+      setUsernameError(errors?.username)
+    }
+    if(errors?.email){
+      setEmailError(errors?.email)
+    }
+    if(errors?.password){
+      setPasswordError(errors?.password)
+    }
+  },[errors])
 
   // email validator
   const emailValidator = (email) => {
@@ -85,13 +106,13 @@ const Register = () => {
       !passwordError &&
       !passwordConfirmError
     ) {
-      console.log({ username, email, password });
-      setUsername("")
-      setEmail("")
-      setPassword("")
-      setConfirmPassword("")
+      dispatch(userRegister({username,email,password}))
     }
   };
+
+  if(isUserRegistering){
+    return <UsersSpinner />
+  }
 
   return (
     <div>
@@ -364,6 +385,7 @@ const Register = () => {
             already have an{" "}
             <button className="font-bold hover:underline" onClick={()=>{
               dispatch(usersDirectionSetter("LOGIN"))
+              dispatch(resetErrors())
             }}>account</button> ?
           </p>
         </div>
